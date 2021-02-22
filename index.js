@@ -37,12 +37,16 @@ app.post('/event', async (req, res) => {
   }
 })
 
-app.get("/event", async (req, res) => {
+app.get("/event/:id", async (req, res) => {
   try {
-      var result = await Appointment.find().exec();
-      res.status(200).json(result);
-  } catch (error) {
-      res.status(500).json(error);
+    let id = req.params.id
+    const event = await Appointment.findById(id).exec();
+    if (!event) return res.status(404).json({msg: "There is no event in DB"});
+
+    res.status(200).json(event);
+
+  } catch (e) {
+    res.status(500).send("server error")
   }
 });
 
